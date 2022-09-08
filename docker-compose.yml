@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  db:
+    restart: always
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+      - POSTGRES_DB=student_management_db
+    volumes:
+      - dj_postgres_data:/var/lib/postgresql/data/
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./student_management_system/student_management_system/.env
+    ports:
+      - "9000:9000"
+    volumes:
+      - static_volume:/app/static  
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./assets/nginx/nginx.http.config:/etc/nginx/nginx.conf
+      - static_volume:/app/static
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+    restart:
+      on-failure:5
+
+  smtp-server:
+    image: mailhog/mailhog
+    expose:
+      - 1025
+      - 8025
+    ports:
+      - '1025:1025'
+      - '8025:8025'    
+
+volumes:
+  dj_postgres_data:
+  static_volume:

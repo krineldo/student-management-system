@@ -1,0 +1,29 @@
+{% extends 'admin/admin-index.html' %}
+{% load static %}
+
+
+{% block content %}
+    <h1 class="mt-4">Announcement</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/admin-dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active">Announcement</li>
+    </ol>
+    <div class="card mb-4">
+      <div class="card-header">
+        <i class="fa-solid fa-bullhorn"></i>
+        Make an announcement
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-outline mb-4">
+            <textarea type="text" name="message" maxlength="500" placeholder="Write Your Message Here" class="form-control" required="" id="id_message" rows="4"></textarea>
+          </div>
+          <div>
+              <input type="hidden" name="by" value="school" maxlength="20" placeholder="Your Name" class="form-control" required="" id="id_by">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block mb-4">Submit</button>
+        </form>
+      </div>
+    </div>
+{% endblock content %}
